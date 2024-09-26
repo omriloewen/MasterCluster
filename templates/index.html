@@ -1,0 +1,28 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Cluster</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Master Cluster</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload CSV File:</label>
+        <input type="file" name="file" id="file" required accept=".csv">
+
+        <label for="param">Enter the number of clusters required (or leave blank for auto-optimal selection):</label>
+        <input type="number" name="param" id="param" placeholder="Enter number" min="2" step="1">
+
+        <input type="checkbox" id="auto_select" name="auto_select" value="true">
+        <label for="auto_select">Let the system choose for me</label>
+
+        <input type="submit" value="Upload and Process">
+    </form>
+
+    <!-- אם יש לך קובץ JavaScript, תוכל לקשר אותו כאן -->
+    <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
+</body>
+</html>

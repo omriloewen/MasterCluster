@@ -1,0 +1,62 @@
+/* result_styles.css */
+
+/* עיצוב לגוף הדף */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* כותרות */
+h1 {
+    color: #c595ff;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* עיצוב ל-div המכיל את הגרף */
+.graph-container {
+    width: 100%;
+    max-width: 1000px; /* ניתן להגדיל או להקטין לפי הצורך */
+    margin: 0 auto;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+/* התאמת הגרף לגודל ה-div */
+.graph-container .plotly-graph-div {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* עיצוב הלינק ככפתור */
+a.back-link {
+    display: inline-block;
+    background-color: #bb86fc;
+    color: #000000;
+    padding: 12px 20px;
+    margin-top: 0;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+a.back-link:hover {
+    background-color: #9b59b6;
+    color: #ffffff;
+}
+
+/* התאמת רקע לגרף של Plotly */
+.plotly-graph-div {
+    background-color: #1e1e1e;
+}
+
+/* התאמת צבעי הטקסט והסרגל של Plotly */
+.plotly .modebar {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
