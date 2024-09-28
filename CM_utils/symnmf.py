@@ -1,9 +1,11 @@
 """ Python interface """
 
-from . import mysymnmf
+import ctypes
 import numpy as np
 import pandas as pd
 import math
+
+mysymnmf = ctypes.CDLL("/app/c_extensions/symnmfmoudule/mysymnmf.so")
 
 
 def input_to_X(input_file):

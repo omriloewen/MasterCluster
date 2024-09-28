@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
-from . import mykmeanssp
+import ctypes
+
+mykmeanssp = ctypes.CDLL("/app/c_extensions/kmeansppmodule/mykmeanssp.so")
 
 
 # get the data point from an input file
