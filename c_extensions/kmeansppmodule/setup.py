@@ -1,8 +1,6 @@
 from setuptools import setup, Extension
 
-module = Extension(
-    "mykmeanssp", sources=["c_extensions/kmeansppmodule/kmeansppmodule.c"]
-)
+module = Extension("mykmeanssp", sources=["kmeansppmodule.c"])
 setup(
     name="mykmeanssp",
     version="1.0",

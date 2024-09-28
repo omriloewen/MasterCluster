@@ -1,6 +1,6 @@
 from setuptools import setup, Extension
 
-module = Extension("mysymnmf", sources=["c_extensions/symnmfmoudule/symnmfmodule.c"])
+module = Extension("mysymnmf", sources=["symnmfmodule.c"])
 setup(
     name="mysymnmf",
     version="1.0",
