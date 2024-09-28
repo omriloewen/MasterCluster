@@ -1,10 +1,14 @@
-# השתמש בתמונה של פייתון 3.12 עם אדריכלות x86_64
-FROM python:3.12-slim
+FROM --platform=linux/amd64 python:3.12-slim
 
-# התקן את התלויות הדרושות לקומפילציה של מודולים
+# התקנת כל התלויות הדרושות
 RUN apt-get update && apt-get install -y build-essential python3-dev
+
+# התקנת setuptools
 RUN pip install setuptools
+
+# יצירת תיקיית output
 RUN mkdir -p /output
+
 # הגדרת ספריית עבודה עבור מודול 1 (kmeanspp)
 WORKDIR /app/kmeansppmodule
 
@@ -18,10 +22,10 @@ RUN python3 setup.py build_ext --inplace
 RUN cp build/lib*/mykmeanssp*.so /output/mykmeanssp.cpython-312-x86_64-linux-gnu.so
 
 # הגדרת ספריית עבודה עבור מודול 2 (symnmf)
-WORKDIR /app/symnmfmuodule
+WORKDIR /app/symnmfmoudule
 
 # העתקת כל קבצי המודול 2 לתוך הקונטיינר
-COPY symnmfmoudule /app/symnmfmuodule
+COPY symnmfmoudule /app/symnmfmoudule
 
 # קומפילציה של המודול השני (symnmf)
 RUN python3 setup.py build_ext --inplace
