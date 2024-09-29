@@ -1,0 +1,5 @@
+# Exclude build artifacts of C extensions
+c_extensions/*/build/
+c_extensions/*/dist/
+c_extensions/*/*.egg-info/
+venv/
