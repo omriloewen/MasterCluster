@@ -1,1 +1,0 @@
-web: ./bin/compile && gunicorn app:app
