@@ -1,0 +1,7 @@
+echo "Checking files in kmeansppmodule"
+ls -l c_extensions/kmeansppmodule
+python c_extensions/kmeansppmodule/setup.py build_ext --inplace
+
+echo "Checking files in symnmfmodule"
+ls -l c_extensions/symnmfmoudule
+python c_extensions/symnmfmoudule/setup.py build_ext --inplace
