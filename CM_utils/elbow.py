@@ -15,11 +15,11 @@ def cluster(filepath):
     """
     print("elbow.cluster")
     # Load the data from the specified CSV file
-    X = pd.read_csv(filepath, header=None, delimiter=",")
+    X = pd.read_csv(filepath, header=None, delimiter=",").values
     # Perform elbow clustering with k-means
-    kmeans_res = elbow_clustering(X, filepath, kmeanspp.kmeanspp, "kmeans")
+    kmeans_res = elbow_clustering(X, filepath, kmeanspp.kmeanspp)
     # Perform elbow clustering with Symmetric Non-negative Matrix Factorization (SymNMF)
-    symnmf_res = elbow_clustering(X, filepath, symnmf.symnmf, "SymNMF")
+    symnmf_res = elbow_clustering(X, filepath, symnmf.symnmf)
 
     # Compare silhouette scores and choose the clustering method accordingly
     if kmeans_res[1] > symnmf_res[1]:
@@ -60,9 +60,10 @@ def elbow_clustering(X, filepath, clustering_method, maxk=50, min_delta=0.02):
     # Prepare to evaluate 4 clusters
     labels_m1 = clustering_method(filepath, 4)
     score_m1 = silhouette_score(X, labels_m1)
+
     d_m1 = score_m1 - score_m2
     # Iterate from 5 clusters up to maxk to find the optimal number of clusters
-    for k in range(5, min(len(X), maxk)):
+    for k in range(5, min(X.shape[0], maxk)):
         labels = clustering_method(filepath, k)
         score = silhouette_score(X, labels)
         d = score - score_m1
