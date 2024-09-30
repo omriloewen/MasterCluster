@@ -3,3 +3,11 @@ c_extensions/*/build/
 c_extensions/*/dist/
 c_extensions/*/*.egg-info/
 venv/
+# התיקיות והקבצים שנוצרו מקומית ואנחנו לא רוצים להעלות ל-Git
+build/
+dist/
+*.so
+*.o
+*.pyc
+__pycache__/
+*.egg-info/
