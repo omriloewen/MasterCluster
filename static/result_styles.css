@@ -1,62 +1,63 @@
 /* result_styles.css */
 
-/* עיצוב לגוף הדף */
+/* Styles for the body of the page */
 body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+    background-color: #121212; /* Dark background color for the body */
+    color: #ffffff; /* White text color for better readability */
+    font-family: Arial, sans-serif; /* Sets the font for the page */
+    margin: 0; /* Removes default margin */
+    padding: 20px; /* Adds padding around the body content */
 }
 
-/* כותרות */
+/* Styles for main headings (h1) */
 h1 {
-    color: #c595ff;
-    text-align: center;
-    margin-bottom: 10px;
+    color: #c595ff; /* Purple color for the heading */
+    text-align: center; /* Centers the heading */
+    margin-bottom: 10px; /* Adds space below the heading */
 }
 
-/* עיצוב ל-div המכיל את הגרף */
+/* Styles for the container div holding the graph */
 .graph-container {
-    width: 100%;
-    max-width: 1000px; /* ניתן להגדיל או להקטין לפי הצורך */
-    margin: 0 auto;
-    padding: 0;
-    margin-bottom: 0;
+    width: 100%; /* Makes the container take full width */
+    max-width: 1000px; /* Limits the maximum width to 1000px */
+    margin: 0 auto; /* Centers the container horizontally */
+    padding: 0; /* No padding inside the container */
+    margin-bottom: 0; /* No margin below the container */
 }
 
-/* התאמת הגרף לגודל ה-div */
+/* Styles for the graph inside the container */
 .graph-container .plotly-graph-div {
-    width: 100% !important;
-    height: auto !important;
+    width: 100% !important; /* Forces the width of the graph to fill the container */
+    height: auto !important; /* Maintains the aspect ratio of the graph */
 }
 
-/* עיצוב הלינק ככפתור */
+/* Styles for the back link, styled as a button */
 a.back-link {
-    display: inline-block;
-    background-color: #bb86fc;
-    color: #000000;
-    padding: 12px 20px;
-    margin-top: 0;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    cursor: pointer;
-    font-weight: bold;
+    display: inline-block; /* Makes the link behave like a block element */
+    background-color: #bb86fc; /* Light purple background for the button */
+    color: #000000; /* Black text for visibility */
+    padding: 12px 20px; /* Padding inside the button */
+    margin-top: 0; /* No margin on top */
+    border: none; /* No border around the button */
+    border-radius: 4px; /* Rounded corners for the button */
+    text-decoration: none; /* Removes underline from the link */
+    cursor: pointer; /* Changes the cursor to pointer on hover */
+    font-weight: bold; /* Makes the text bold */
 }
 
+/* Styles for the back link on hover */
 a.back-link:hover {
-    background-color: #9b59b6;
-    color: #ffffff;
+    background-color: #9b59b6; /* Changes background color on hover */
+    color: #ffffff; /* Changes text color to white on hover */
 }
 
-/* התאמת רקע לגרף של Plotly */
+/* Styles for the Plotly graph background */
 .plotly-graph-div {
-    background-color: #1e1e1e;
+    background-color: #1e1e1e; /* Dark gray background for the graph */
 }
 
-/* התאמת צבעי הטקסט והסרגל של Plotly */
+/* Styles for the Plotly mode bar (controls) */
 .plotly .modebar {
-    background-color: #1e1e1e !important;
-    color: #ffffff !important;
+    background-color: #1e1e1e !important; /* Dark background for the mode bar */
+    color: #ffffff !important; /* White text for better readability */
 }

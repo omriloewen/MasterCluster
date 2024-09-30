@@ -1,72 +1,74 @@
-/* עיצוב לגוף הדף */
+/* This section styles the body of the webpage */
 body {
-    background-color: #121212; /* רקע כהה */
-    color: #ffffff; /* טקסט לבן */
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+    background-color: #121212; /* Dark background color */
+    color: #ffffff; /* White text color */
+    font-family: Arial, sans-serif; /* Font style for the entire page */
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Add padding around the content */
 }
 
-/* כותרת ראשית */
+/* Styles for the main heading (h1 element) */
 h1 {
-    color: #c595ff;
-    text-align: center;
-    margin-bottom: 30px;
+    color: #813b78; /* Purple color for the heading */
+    text-align: center; /* Center the heading */
+    margin-bottom: 30px; /* Space below the heading */
 }
 
-/* עיצוב הטופס */
+/* Styles for the form element */
 form {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 600px; /* Maximum width of the form */
+    margin: 0 auto; /* Center the form horizontally */
 }
 
-/* עיצוב תוויות */
+/* Styles for the labels in the form */
 label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
+    display: block; /* Make each label occupy full width */
+    margin-bottom: 10px; /* Space below each label */
+    font-weight: bold; /* Make labels bold */
 }
 
-/* עיצוב שדות קלט */
+/* Styles for input fields of certain types */
 input[type="text"],
 input[type="number"],
 input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #1c1426;
-    border: 1px solid #333333;
-    color: #ffffff;
-    border-radius: 4px;
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin-bottom: 20px; /* Space below each input */
+    background-color: #1c1426; /* Dark background for inputs */
+    border: 1px solid #333333; /* Dark border around inputs */
+    color: #ffffff; /* White text color in inputs */
+    border-radius: 4px; /* Rounded corners for inputs */
 }
 
-/* עיצוב תיבת הסימון */
+/* Styles for checkbox inputs */
 input[type="checkbox"] {
-    margin-right: 10px;
+    margin-right: 10px; /* Space to the right of the checkbox */
 }
 
-/* עיצוב כפתור השליחה */
+/* Styles for the submit button */
 input[type="submit"] {
-    background-color: #bb86fc;
-    color: #000000;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
+    background-color: #bb86fc; /* Light purple background */
+    color: #000000; /* Black text color */
+    padding: 12px 20px; /* Padding inside the button */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners for the button */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    font-weight: bold; /* Make text bold */
 }
 
+/* Styles when hovering over the submit button */
 input[type="submit"]:hover {
-    background-color: #9b59b6;
-    color: #ffffff;
+    background-color: #9b59b6; /* Darker purple on hover */
+    color: #ffffff; /* Change text color to white on hover */
 }
 
-/* עיצוב לינקים (אם יש) */
+/* Styles for links (if any on the page) */
 a {
-    color: #bb86fc;
-    text-decoration: none;
+    color: #bb86fc; /* Purple color for links */
+    text-decoration: none; /* No underline on links */
 }
 
+/* Styles when hovering over links */
 a:hover {
-    text-decoration: underline;
+    text-decoration: underline; /* Underline links on hover */
 }

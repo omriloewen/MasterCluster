@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include <math.h>
 
+/**
+ * @brief Deallocates memory for a 2D array.
+ *
+ * This function frees the memory allocated for a 2D array of doubles.
+ *
+ * @param array A pointer to the 2D array to be freed.
+ * @param rows The number of rows in the array.
+ */
 void deep_free(double** array, int rows){
     int i;
     for(i = 0; i < rows; i++){
@@ -12,20 +20,40 @@ void deep_free(double** array, int rows){
     free(array);
 }
 
-/*calculta the ecludian distance between two vectors*/
+/**
+ * @brief Calculates the Euclidean distance between two vectors.
+ *
+ * This function computes the Euclidean distance between two points in d-dimensional space.
+ *
+ * @param vec1 A pointer to the first vector.
+ * @param vec2 A pointer to the second vector.
+ * @param d The dimension of the vectors.
+ * @return The Euclidean distance between vec1 and vec2.
+ */
 static double calc_ED(double* vec1, double* vec2, int d){
     double dist, diff;
     int i;
 
     dist = 0;
     for(i = 0; i < d; i++){ /*for each cord*/
-        diff = vec1[i] - vec2[i];/*find the difrance*/
-        dist += diff * diff;/*add the squre difrance to the result*/
+        diff = vec1[i] - vec2[i];/*find the distance*/
+        dist += diff * diff;/*add the square distance to the result*/
     }
-    return sqrt(dist);/*the squre root of the squre difrances sum*/
+    return sqrt(dist);/*the square root of the square distances sum*/
 }
 
-/*check if the new cetroids and the old ones are near enough to finish*/
+/**
+ * @brief Checks if the centroids have converged.
+ *
+ * This function checks if the change in centroids is smaller than a given threshold.
+ *
+ * @param cents A pointer to the old centroids.
+ * @param curr_cents A pointer to the current centroids.
+ * @param k The number of centroids.
+ * @param d The dimension of the centroids.
+ * @param e The convergence threshold.
+ * @return 1 if the change is small enough, 0 otherwise.
+ */
 static int is_delta_small_enough(double** cents, double** curr_cents, int k, int d, double e){
     int i;
 
@@ -37,12 +65,22 @@ static int is_delta_small_enough(double** cents, double** curr_cents, int k, int
     return 1; /*enough*/
 }
 
-/*find the index of the nearest center from the given vector*/
+/**
+ * @brief Finds the index of the nearest centroid for a given vector.
+ *
+ * This function identifies which of the k centroids is closest to the given vector.
+ *
+ * @param cents A pointer to the centroids.
+ * @param vector A pointer to the vector.
+ * @param k The number of centroids.
+ * @param d The dimension of the vector.
+ * @return The index of the closest centroid.
+ */
 static int closest_cent_ind(double** cents, double* vector, int k, int d){
     int cent_ind,i;
     double min_dist, curr_dist;
 
-    min_dist = calc_ED(vector, cents[0], d); /*set the distance from the first centes as the initial minimum*/
+    min_dist = calc_ED(vector, cents[0], d); /*set the distance from the first centroid as the initial minimum*/
     cent_ind = 0;
 
     for(i = 1; i < k; i++){ /*go over all the other centers*/
@@ -55,20 +93,31 @@ static int closest_cent_ind(double** cents, double* vector, int k, int d){
     
     return cent_ind;
 }
-/*compute the new centroids given the clusters as the vectors and each vector ckuster index*/
+/**
+ * @brief Computes new centroids from the clusters formed by the vectors.
+ *
+ * This function updates the positions of centroids based on the assigned clusters.
+ *
+ * @param curr_cents A pointer to the current centroid positions.
+ * @param vectors A pointer to the vectors.
+ * @param d The dimension of the vectors.
+ * @param k The number of centroids.
+ * @param N The number of vectors.
+ * @param clus_of An array of cluster assignments for each vector.
+ */
 static void update_cents(double** curr_cents, double** vectors, int d, int k, int N, int* clus_of){
     double** sum;
     double* size;
     int j,i,vec,cord,clus;
 
-    /*alucate mmemory to save the sums and sizes of the clusters*/
+    /*allocate memory to save the sums and sizes of the clusters*/
     sum = (double**)malloc(k * sizeof(double*));
     for(i = 0; i < k; i++){
         sum[i] = (double*)malloc(d * sizeof(double));
     }
     size = (double*)malloc(k * sizeof(double));
 
-    /*cumpute each cluster size and each cluster cordinate sum*/
+    /*compute each cluster size and each cluster coordinate sum*/
     for(i = 0; i < k; i++){
         size[i] = 0;
         for(j = 0; j < d; j++){
@@ -90,13 +139,27 @@ static void update_cents(double** curr_cents, double** vectors, int d, int k, in
         }
     }
 
-    /*free the memmory allocated*/
+    /*free the memory allocated*/
     deep_free(sum, k);
     free(size);
     
 }
 
-/*the main kmeans algorythm implemantation*/
+/**
+ * @brief Implements the k-means clustering algorithm.
+ *
+ * This function iteratively assigns vectors to clusters and updates centroids until convergence or until
+ * the maximum number of iterations is reached.
+ *
+ * @param N The number of vectors.
+ * @param d The dimension of each vector.
+ * @param k The number of centroids (clusters).
+ * @param iter The maximum number of iterations.
+ * @param e The convergence threshold.
+ * @param vectors A pointer to the input vectors.
+ * @param cents A pointer to the initial centroids.
+ * @return An array of cluster assignments for each vector.
+ */
 static int* kmeans(int N, int d, int k, int iter, double e, double** vectors, double** cents) {
     int num_iter, enough, clus, i, j, vec;
     double** curr_cents;
@@ -105,7 +168,7 @@ static int* kmeans(int N, int d, int k, int iter, double e, double** vectors, do
     num_iter = 0;
     enough = 0;
     
-    /*allocate memory for the cumputed centroids and the clusters*/
+    /*allocate memory for the computed centroids and the clusters*/
     clus_of = (int*)malloc(N * sizeof(int));
     curr_cents = (double**)malloc(k * sizeof(double*));
     for(i = 0; i < k; i++){
@@ -114,7 +177,7 @@ static int* kmeans(int N, int d, int k, int iter, double e, double** vectors, do
     
     
 
-    while(!enough && num_iter < iter){ /*until convergence or maximun itertation*/
+    while(!enough && num_iter < iter){ /*until convergence or maximum iteration*/
         
          /*Assign every vectors to the closest cluster*/
         for(vec = 0; vec < N; vec++){
@@ -138,14 +201,23 @@ static int* kmeans(int N, int d, int k, int iter, double e, double** vectors, do
         }
     }
     
-    /*free alocated memory*/
+    /*free allocated memory*/
     deep_free(curr_cents, k);
     deep_free(cents, k);
     
     return clus_of;
 }
 
-
+/**
+ * @brief The Python interface for fitting the k-means model.
+ *
+ * This function accepts input vectors and initial centroids from Python, and returns the final cluster 
+ * assignments using the k-means algorithm.
+ *
+ * @param self The Python object reference.
+ * @param args A tuple containing the Python arguments.
+ * @return A Python list of cluster assignments for each vector.
+ */
 static PyObject* fit(PyObject* self, PyObject* args){
     PyObject *PyVectors, *PyCents, *PyVec, *PyCord, *PyLabels;
     int N, d, k, iter, vec, cord;
@@ -159,7 +231,7 @@ static PyObject* fit(PyObject* self, PyObject* args){
         return NULL;
     }
 
-    /*allocta memory for the vectors and centroids*/
+    /*allocate memory for the vectors and centroids*/
     vectors = (double**)malloc(N * sizeof(double*));
     for(vec = 0; vec < N; vec++){
         vectors[vec] = (double*)malloc(d * sizeof(double));
@@ -169,7 +241,7 @@ static PyObject* fit(PyObject* self, PyObject* args){
         cents[vec] = (double*)malloc(d * sizeof(double));
     }
 
-    /*convert the python vectors and cetroids to c arrays*/
+    /*convert the python vectors and centroids to c arrays*/
     for(vec = 0; vec < N; vec++){
         PyVec = PyList_GetItem(PyVectors, vec);
         for(cord = 0; cord < d; cord++){
@@ -185,7 +257,7 @@ static PyObject* fit(PyObject* self, PyObject* args){
         }
     }
 
-    /*compute the final centroids with the kmeans algorythm*/
+    /*compute the final centroids with the kmeans algorithm*/
     labels = kmeans(N, d, k, iter, e, vectors, cents);
 
     /*create the python list of the centroids*/
@@ -201,13 +273,13 @@ static PyObject* fit(PyObject* self, PyObject* args){
     return PyLabels;
 }
 
-/*mudule methods*/
+/*module methods*/
 static PyMethodDef MyMethods[] = {
-    {"fit", fit, METH_VARARGS, PyDoc_STR("clculate the centroids with the kmeans algorythm \n(vectors list, initial centers list, number of vectors, the dimension, number of centers to compute, maximum iteration, epsilon)")},
+    {"fit", fit, METH_VARARGS, PyDoc_STR("calculate the centroids with the kmeans algorithm \n(vectors list, initial centers list, number of vectors, the dimension, number of centers to compute, maximum iteration, epsilon)")},
     {NULL, NULL, 0, NULL}
 };
 
-/*module defenitions*/
+/*module definitions*/
 static struct PyModuleDef mykmeanssp = {
     PyModuleDef_HEAD_INIT,
     "mykmeanssp",

@@ -1,53 +1,68 @@
-""" Python interface """
-
 import numpy as np
 import pandas as pd
-import math
 import mysymnmf
 
 
 def input_to_X(input_file):
-    """
-    Reads input txt file into matrix X
+    """Reads a CSV file and converts it into a list of lists.
 
     Args:
-        input_file (str): The path of the file (from root of this file)
+        input_file (str): The path to the CSV file to be read.
 
     Returns:
-            tuple of:
-        X (list of list of float): The data in the file
-        N (int): Number of datapoints in input file
-        d (int): Dimention of datapoints
+        list: A list of lists containing the data from the CSV file.
     """
-    readfile = pd.read_csv(input_file, header=None, delimiter=",")
-    X = readfile.to_numpy().tolist()
-    return X
+    # Use pandas to read the CSV file without headers and convert to a list of lists
+    return pd.read_csv(input_file, header=None).values.tolist()
 
 
 def gen_H(W, k):
-    """
-    Generates the initial H matrix for the symnmf algorithem
+    """Generates an initial matrix H using a uniform distribution.
 
     Args:
-        W (numpy ndarray): The normalized similarity matrix
-        k (int): The number of requested clusters
+        W (numpy.ndarray): The input matrix W used in the NMF process.
+        k (int): The number of components for the matrix H.
 
     Returns:
-        H0 (numpy ndarray): Initialized H0 matrix
+        list: A list representing the generated matrix H.
     """
-    # initialize H
-    m = np.mean(np.asarray(W)).item()
-    return (np.random.uniform(0, 2 * math.sqrt(m / k), (len(W), k))).tolist()
+    # Calculate the mean of the elements in W
+    mean_W = np.mean(W)
+    # Generate a uniform distribution for H based on the mean and number of components k
+    return np.random.uniform(0, 2 * np.sqrt(mean_W / k), (W.shape[0], k)).tolist()
 
 
 def symnmf_labels(W, H_init):
-    H = mysymnmf.symnmf(W, H_init, len(W), len(H_init[0]))
-    labels = [H[i].index(max(H[i])) for i in range(len(H))]
-    return labels
+    """Generates labels based on the maximum value in each row of matrix H after applying NMF.
+
+    Args:
+        W (numpy.ndarray): The input matrix W used in NMF.
+        H_init (list): The initial guess for matrix H.
+
+    Returns:
+        list: A list of labels, where each label corresponds to the index of the maximum element in each row of H.
+    """
+    # Perform symmetric NMF to compute the matrix H
+    H = mysymnmf.symnmf(W, H_init, W.shape[0], len(H_init[0]))
+    # Generate labels based on the index of the maximum value in each row of H
+    return [np.argmax(row) for row in H]
 
 
 def symnmf(filepath, k):
+    """Executes symmetric Non-negative Matrix Factorization (NMF) on the data from a specified file.
+
+    Args:
+        filepath (str): The path to the input data file (CSV format).
+        k (int): The number of components to factorize into.
+
+    Returns:
+        list: A list of labels resulting from the NMF process.
+    """
+    # Convert the input CSV file to a matrix X
     X = input_to_X(filepath)
+    # Normalize the matrix X to create the input matrix W for NMF
     W = mysymnmf.norm(X, len(X), len(X[0]))
+    # Generate the initial matrix H
     H = gen_H(W, k)
+    # Generate and return labels based on the NMF result
     return symnmf_labels(W, H)
