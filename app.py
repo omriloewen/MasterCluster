@@ -3,6 +3,8 @@ from CM_utils import cluster, elbow, graph
 import os
 import pandas as pd
 import numpy as np
+import logging
+
 
 app = Flask(__name__)
 
@@ -31,11 +33,13 @@ def process_input(filepath, param):
 
 @app.route("/")
 def index():
+    print("home page")
     return render_template("index.html")
 
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
+    print("here")
     if "file" not in request.files:
         return "No file part"
 
@@ -65,6 +69,8 @@ def upload_file():
         X_reduced = graph.reduce_dimensions(X, n_components=3)
         graph.create_3d_cluster_plot(X_reduced, labels)
         return render_template("result.html")
+    except Exception as e:
+        print(e)
     finally:
         if os.path.exists(filepath):
             os.remove(filepath)
