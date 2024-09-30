@@ -16,6 +16,7 @@ def reduce_dimensions(X, n_components=3):
     Returns:
         ndarray: The transformed dataset with reduced dimensions.
     """
+    print("graph.reduce_dimensions")
     pca = PCA(n_components=n_components)
     return pca.fit_transform(X)
 
@@ -29,7 +30,7 @@ def create_3d_cluster_plot(X, cluster_labels):
         cluster_labels (ndarray): Labels indicating the cluster assignment
                                    for each sample in X.
     """
-
+    print("graph.create_3d_cluster_plot")
     # Create DataFrame from the reduced results for easier plotting
     df = pd.DataFrame(
         {
@@ -70,6 +71,7 @@ def update_dark_mode_layout(fig):
     Args:
         fig (plotly.graph_objs.Figure): The Plotly figure to be updated.
     """
+    print("graph.update_dark_mode_layout")
     fig.update_layout(
         scene=dict(
             xaxis=dict(backgroundcolor="#1e1e1e", color="#ffffff", gridcolor="#444444"),

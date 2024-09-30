@@ -44,11 +44,10 @@ def process_input(filepath, param):
             - labels (list): Cluster labels for each data point.
             - k (int): Number of clusters.
     """
+    print("process_input")
     if param == 0:
-        print("using elbow method")
         labels = elbow.cluster(filepath)
     else:
-        print("clustering into ", param, " clusters")
         labels = cluster.cluster(filepath, param)
 
     k = max(param, max(labels) + 1)

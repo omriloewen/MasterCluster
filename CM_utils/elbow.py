@@ -13,12 +13,13 @@ def cluster(filepath):
     Returns:
         array: The cluster labels assigned to the data points based on the chosen clustering method.
     """
+    print("elbow.cluster")
     # Load the data from the specified CSV file
     X = pd.read_csv(filepath, header=None, delimiter=",")
     # Perform elbow clustering with k-means
-    kmeans_res = elbow_clustering(X, kmeanspp.kmeanspp, "kmeans")
+    kmeans_res = elbow_clustering(X, filepath, kmeanspp.kmeanspp, "kmeans")
     # Perform elbow clustering with Symmetric Non-negative Matrix Factorization (SymNMF)
-    symnmf_res = elbow_clustering(X, symnmf.symnmf, "SymNMF")
+    symnmf_res = elbow_clustering(X, filepath, symnmf.symnmf, "SymNMF")
 
     # Compare silhouette scores and choose the clustering method accordingly
     if kmeans_res[1] > symnmf_res[1]:
@@ -29,7 +30,7 @@ def cluster(filepath):
         return symnmf_res[0]
 
 
-def elbow_clustering(X, clustering_method, maxk=50, min_delta=0.02):
+def elbow_clustering(X, filepath, clustering_method, maxk=50, min_delta=0.02):
     """Determines the optimal number of clusters for the provided clustering method.
 
     The method uses silhouette scores to evaluate the clustering quality and applies
@@ -44,11 +45,12 @@ def elbow_clustering(X, clustering_method, maxk=50, min_delta=0.02):
     Returns:
         tuple: A tuple containing the labels of the clusters and the best silhouette score achieved.
     """
+    print("elbow.elbow_clustering with method ", clustering_method)
     # Generate cluster labels and silhouette score for 2 clusters
-    labels2 = clustering_method(X, 2)
+    labels2 = clustering_method(filepath, 2)
     score_m3 = silhouette_score(X, labels2)
     # Generate cluster labels and silhouette score for 3 clusters
-    labels_m2 = clustering_method(X, 3)
+    labels_m2 = clustering_method(filepath, 3)
     score_m2 = silhouette_score(X, labels_m2)
     # Calculate the improvement in score from 2 clusters to 3 clusters
     d_m2 = score_m2 - score_m3
@@ -56,12 +58,12 @@ def elbow_clustering(X, clustering_method, maxk=50, min_delta=0.02):
     if d_m2 < min_delta:
         return labels2, score_m3
     # Prepare to evaluate 4 clusters
-    labels_m1 = clustering_method(X, 4)
+    labels_m1 = clustering_method(filepath, 4)
     score_m1 = silhouette_score(X, labels_m1)
     d_m1 = score_m1 - score_m2
     # Iterate from 5 clusters up to maxk to find the optimal number of clusters
     for k in range(5, min(len(X), maxk)):
-        labels = clustering_method(X, k)
+        labels = clustering_method(filepath, k)
         score = silhouette_score(X, labels)
         d = score - score_m1
         # If the score improvement conditions indicate an optimal point, return the results

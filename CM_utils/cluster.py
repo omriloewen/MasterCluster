@@ -22,12 +22,13 @@ def cluster(filepath, k):
         FileNotFoundError: If the specified file does not exist.
         ValueError: If k is less than 1.
     """
+    print("cluster.cluster")
     # Get cluster labels from KMeans++ algorithm
     kmeans_labels = kmeanspp.kmeanspp(filepath, k)
     # Get cluster labels from Symmetric Non-negative Matrix Factorization
     symnmf_labels = symnmf.symnmf(filepath, k)
     # Load the data from the specified CSV file
-    X = pd.read_csv(filepath, header=None, delimiter=",")
+    X = pd.read_csv(filepath, header=None).to_numpy()
     # Calculate silhouette scores for both clustering methods
     Kmeans_score = silhouette_score(X, kmeans_labels)
     symnmf_score = silhouette_score(X, symnmf_labels)
