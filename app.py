@@ -12,6 +12,12 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+if not os.path.exists(app.config["UPLOAD_FOLDER"]):
+    os.makedirs(app.config["UPLOAD_FOLDER"])
+    print(f"Directory {app.config['UPLOAD_FOLDER']} created.")
+else:
+    print(f"Directory {app.config['UPLOAD_FOLDER']} already exists.")
+
 
 # check if the file is csv
 def allowed_file(filename):
