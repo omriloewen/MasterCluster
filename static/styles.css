@@ -1,74 +1,117 @@
-/* This section styles the body of the webpage */
+/* General body styling */
 body {
     background-color: #121212; /* Dark background color */
-    color: #ffffff; /* White text color */
+    color: #e4e2e2; /* White text color */
     font-family: Arial, sans-serif; /* Font style for the entire page */
     margin: 0; /* Remove default margin */
     padding: 20px; /* Add padding around the content */
 }
 
-/* Styles for the main heading (h1 element) */
-h1 {
-    color: #813b78; /* Purple color for the heading */
-    text-align: center; /* Center the heading */
-    margin-bottom: 30px; /* Space below the heading */
-}
-
-/* Styles for the form element */
+/* Center the form and set a max-width */
 form {
     max-width: 600px; /* Maximum width of the form */
     margin: 0 auto; /* Center the form horizontally */
 }
 
-/* Styles for the labels in the form */
+/* Main heading (h1) styling */
+h1 {
+    color: #9b59b6; /* New primary purple color */
+    text-align: center; /* Center the heading */
+    margin-bottom: 30px; /* Space below the heading */
+}
+
+/* Label styles */
 label {
-    display: block; /* Make each label occupy full width */
+    display: block; /* Keep labels inline */
     margin-bottom: 10px; /* Space below each label */
     font-weight: bold; /* Make labels bold */
 }
 
-/* Styles for input fields of certain types */
-input[type="text"],
-input[type="number"],
-input[type="file"] {
-    width: 100%; /* Full width */
+/* Align checkboxes and radios with their labels */
+input[type="checkbox"] + label, input[type="radio"] +label  {
+    display: inline;
+    margin-right: 2px; /* Space between the checkbox/radio and label */
+    vertical-align: middle; /* Align checkboxes with text */
+}
+
+/* Fix checkbox and radio alignment next to labels */
+#advanced_settings input[type="checkbox"] + label {
+    display: inline; /* Keep checkboxes and radios on the same line as labels */
+    margin-left: 5px; /* Small space between the input and label */
+    font-weight: normal; /* Keep label text normal weight */
+    vertical-align: middle; /* Align label text with checkboxes/radios */
+}
+
+/* Input fields like text and number */
+input[type="number"], input[type="file"], input[type="text"] {
+    display: inline-block;
+    width: calc(100% - 20px); /* Maintain margin and fit within container */
     padding: 10px; /* Padding inside the input */
-    margin-bottom: 20px; /* Space below each input */
+    margin-bottom: 10px; /* Space below each input */
     background-color: #1c1426; /* Dark background for inputs */
     border: 1px solid #333333; /* Dark border around inputs */
     color: #ffffff; /* White text color in inputs */
     border-radius: 4px; /* Rounded corners for inputs */
 }
 
-/* Styles for checkbox inputs */
-input[type="checkbox"] {
-    margin-right: 10px; /* Space to the right of the checkbox */
+input[type="number"] {
+    width: 40%;
+    margin-bottom: 5px;
 }
 
-/* Styles for the submit button */
-input[type="submit"] {
-    background-color: #bb86fc; /* Light purple background */
+/* Button styling */
+button, input[type="submit"] {
+    background-color: #8e44ad; /* New secondary purple color */
     color: #000000; /* Black text color */
-    padding: 12px 20px; /* Padding inside the button */
-    border: none; /* Remove default border */
-    border-radius: 4px; /* Rounded corners for the button */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    font-weight: bold; /* Make text bold */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    width: auto;
+    display: block; /* Ensure buttons are on their own line */
 }
 
-/* Styles when hovering over the submit button */
-input[type="submit"]:hover {
-    background-color: #9b59b6; /* Darker purple on hover */
+/* Hover effect for buttons */
+button:hover, input[type="submit"]:hover {
+    background-color: #7a43bc; /* Darker hover color */
     color: #ffffff; /* Change text color to white on hover */
 }
 
-/* Styles for links (if any on the page) */
-a {
-    color: #bb86fc; /* Purple color for links */
-    text-decoration: none; /* No underline on links */
+/* Advanced settings container */
+#advanced_settings {
+    background-color: #1e1e1e; /* Dark background for advanced settings */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px; /* Space below the advanced settings */
+    font-size: 0.9em; /* Make text smaller */
+    display: block;
+    max-width: 60%;
 }
 
-/* Styles when hovering over links */
-a:hover {
-    text-decoration: underline; /* Underline links on hover */
+/* Ensure that labels and inputs align properly in advanced settings */
+#advanced_settings label {
+    display: block; /* Stack inputs vertically */
+    margin-bottom: 5px; /* Reduce space between inputs */
+}
+
+/* Proper width for input fields in advanced settings */
+#advanced_settings input[type="number"], #advanced_settings input[type="text"] {
+    width: 50%; /* Full width within advanced settings */
+}
+
+/* Threshold section stays within the advanced settings container */
+#threshold_option {
+    margin-top: 10px;
+}
+
+hr {
+    border: 1px solid #4b285f; /* New dark purple border color */
+}
+
+.inside {
+    height: auto;
+    padding: 2px 20px;
+    background-color: #7a43bc; /* Darker hover purple color */
 }

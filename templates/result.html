@@ -1,16 +1,169 @@
-<!-- templates/result.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterCluster Result</title>
+    <title>Clustering Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='result_styles.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <h1>Clustering Results</h1>
-    <div class="graph-container">{% include 'cluster_plot.html' %}</div>
-    <a href="/" class="back-link">Cluster another data</a>
+
+    <div class="container">
+        <div class="left_bar">
+        <!-- Left side: Settings -->
+        <div class="settings-container">
+            <form action="/reprocess" method="POST" id="settings-form">
+                <h3>Settings</h3>
+
+                <!-- Clustering Method (Radio Buttons) -->
+                <label>Clustering Method:</label>
+                <input type="radio" name="cluster_method" value="optimal" {% if orig_cluster_method == 'optimal' %}checked{% endif %}> Optimal
+                <input type="radio" name="cluster_method" value="kmeans++" {% if orig_cluster_method == 'kmeans++' %}checked{% endif %}> KMeans++
+                <input type="radio" name="cluster_method" value="symnmf" {% if orig_cluster_method == 'symnmf' %}checked{% endif %}> Symnmf
+                <hr>
+                <!-- Clustering Evaluation Method (Radio Buttons) -->
+                <label>Evaluation Method:</label>
+                <input type="radio" name="clustering_evaluation_method" value="silhouette" {% if orig_clustering_evaluation_method == 'silhouette' %}checked{% endif %}> Silhouette
+                <hr>
+                <!-- Elbow -->
+                <div class="checkbox-container">
+                <input type="checkbox" name="elbow" {% if orig_elbow == 'True' %}checked{% endif %}>
+                <label for="elbow">Auto-Select Clusters number</label>
+                <hr>
+            </div>
+                <!-- Threshold (if Elbow is checked) -->
+                <div id="threshold_section" {% if orig_elbow == 'False' %}style="display:none"{% endif %}>
+                    <label for="threshold">Threshold :</label>
+                    <input type="number" name="threshold" min="0.001" max="0.1" step="0.001" value="{{ orig_threshold }}">
+                    <hr>
+                </div>
+
+                <!-- Maximum Clusters (if Elbow is checked) -->
+                <div id="maxk_section" {% if orig_elbow == 'False' %}style="display:none"{% endif %}>
+                    <label for="maxk">Maximum Clusters number:</label>
+                    <input type="number" name="maxk" value="{{ orig_maxk }}">
+                    <hr>
+                </div>
+
+                <!-- Number of Clusters (if Elbow is not checked) -->
+                <div id="k_section" {% if orig_elbow == 'True' %}style="display:none"{% endif %}>
+                    <label for="k">Number of Clusters (k):</label>
+                    <input type="number" name="k" value="{{ orig_k }}">
+                    <hr>
+                </div>
+
+                <!-- Use PCA -->
+                <div class="checkbox-container">
+                <input type="checkbox" id="use_pca" name="use_pca" {% if orig_use_pca == 'True' %}checked{% endif %}>
+                <label for="use_pca">Use PCA :</label>
+                <hr>
+                </div>
+                <!-- Graph Dimension Selection (shown if PCA is checked) -->
+                <div id="graph_dimension_section" {% if orig_use_pca == 'False' %}style="display:none"{% endif %}>
+                    
+                    <input type="radio" name="graph_dimension" value="3" {% if orig_graph_dimension == '3' %}checked{% endif %}> 3D
+                    <input type="radio" name="graph_dimension" value="2" {% if orig_graph_dimension == '2' %}checked{% endif %}> 2D
+                    <hr>
+                </div>
+
+                <!-- Graph Attributes (shown if PCA is NOT checked) -->
+                <div id="graph_attributes_section" {% if orig_use_pca == 'True' %}style="display:none"{% endif %}>
+                    <label for="graph_attributes">Select 2 or 3 Components:</label>
+                    <div class="components">
+                        {% for i in range(0, D) %}
+                            <input type="checkbox" name="graph_attributes" value="{{ i }}" {% if i in orig_graph_attributes %}checked{% endif %}> {{ headers[i] }}<br>
+                        {% endfor %}
+                    </div>
+                <hr>
+                </div>
+
+                <!-- Reprocess Button -->
+                <input type="submit" value="Reprocess">
+                
+                <input type="hidden" name="orig_cluster_method" value="{{ orig_cluster_method }}">
+                <input type="hidden" name="orig_clustering_evaluation_method" value="{{ orig_clustering_evaluation_method }}">
+                <input type="hidden" name="orig_elbow" value="{{ orig_elbow }}">
+                <input type="hidden" name="orig_threshold" value="{{ orig_threshold }}">
+                <input type="hidden" name="orig_maxk" value="{{ orig_maxk }}">
+                <input type="hidden" name="orig_k" value="{{ orig_k }}">
+                <input type="hidden" name="orig_graph_dimension" value="{{ orig_graph_dimension }}">
+                <input type="hidden" name="orig_use_pca" value="{{ orig_use_pca }}">
+                <input type="hidden" name="orig_graph_attributes" value="{{ orig_graph_attributes | join(',') }}">
+
+                <!-- Hidden Inputs (Serialized DataFrame and other arguments) -->
+                <input type="hidden" name="df_json" value="{{ X_json }}">
+                <input type="hidden" name="csv_header" value="{{ csv_header }}">
+                <input type="hidden" name="headers" value="{{headers | join(',')  }}">
+                <input type="hidden" name="labels" value="{{ labels | join(',')  }}">
+                <input type="hidden" name="score" value="{{ score }}">
+                <!-- Hidden Inputs (Serialized DataFrame and other arguments) -->
+            </form>
+
+        </div>
+        <div class="return-botton"><a href="/">process another File</a></div>
+    </div>
+        
+        <!-- Right side: Graph -->
+        <div class="graph-container">
+            <div id="graph">
+                {% include 'cluster_plot.html' %}
+            </div>
+            <!-- Score Display -->
+            <div id="score-section">
+                <h3>Score: {{ score }}</h3>
+            </div>
+        </div>
+    </div>
+   
+
+    <!-- JavaScript to enforce the selection of 2 or 3 components and toggle sections -->
+    <script>
+        const checkboxes = document.querySelectorAll('input[name="graph_attributes"]');
+        const form = document.querySelector('#settings-form');
+        const usePCACheckbox = document.querySelector('#use_pca');
+        const graphDimensionSection = document.getElementById('graph_dimension_section');
+        const graphAttributesSection = document.getElementById('graph_attributes_section');
+
+        function validateComponentSelection() {
+            const checkedCount = document.querySelectorAll('input[name="graph_attributes"]:checked').length;
+            if (!usePCACheckbox.checked && (checkedCount < 2 || checkedCount > 3)) {
+                alert('Please select exactly 2 or 3 components.');
+                return false;
+            }
+            return true;
+        }
+
+        // Toggle between graph dimension and component selection based on PCA checkbox
+        usePCACheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                graphDimensionSection.style.display = 'block';
+                graphAttributesSection.style.display = 'none';
+            } else {
+                graphDimensionSection.style.display = 'none';
+                graphAttributesSection.style.display = 'block';
+            }
+        });
+
+        form.addEventListener('submit', function(e) {
+            if (!validateComponentSelection()) {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+
+        // Show/Hide threshold and maxk sections based on the Elbow checkbox
+        document.querySelector('input[name="elbow"]').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('threshold_section').style.display = 'block';
+                document.getElementById('maxk_section').style.display = 'block';
+                document.getElementById('k_section').style.display = 'none';
+            } else {
+                document.getElementById('threshold_section').style.display = 'none';
+                document.getElementById('maxk_section').style.display = 'none';
+                document.getElementById('k_section').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>

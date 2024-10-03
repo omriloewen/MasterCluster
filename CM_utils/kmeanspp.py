@@ -15,7 +15,7 @@ def read_file(path):
     """
     print("kmeanspp.read_file")
 
-    return pd.read_csv(path, header=None).to_numpy().tolist()
+    return pd.read_csv(path).values.tolist()
 
 
 def init_centroids(vectors, k):
@@ -77,7 +77,7 @@ def kmeans_labels(vectors, centroids, k, iter=300, e=0.001):
     Returns:
         list: A list of cluster labels corresponding to the input data points.
     """
-    print("kmeanspp.kmean_labels")
+    print("kmeanspp.kmeans_labels")
     N = len(vectors)
     d = len(
         vectors[0]
@@ -86,7 +86,7 @@ def kmeans_labels(vectors, centroids, k, iter=300, e=0.001):
     return mykmeanssp.fit(vectors, centroids, N, d, k, iter, e)
 
 
-def kmeanspp(file_path, k):
+def kmeanspp(X, k):
     """Perform K-Means clustering on data read from a file.
 
     This function reads data from a CSV file, initializes centroids using K-Means++,
@@ -100,8 +100,10 @@ def kmeanspp(file_path, k):
         list: A list of cluster labels corresponding to the input data points.
     """
     print("kmeanspp.kmeanspp")
-    X = read_file(file_path)  # Read data points from the provided file path
-    centroids = init_centroids(X, k)  # Initialize centroids for the K-Means algorithm
+    X_values_list = X.values.tolist()  # Read data points from the provided file path
+    centroids = init_centroids(
+        X_values_list, k
+    )  # Initialize centroids for the K-Means algorithm
     return kmeans_labels(
-        X, centroids, k
+        X_values_list, centroids, k
     )  # Assign cluster labels to the data points using the initialized centroids

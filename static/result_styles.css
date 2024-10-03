@@ -1,63 +1,190 @@
-/* result_styles.css */
-
-/* Styles for the body of the page */
+/* General body styling */
 body {
-    background-color: #121212; /* Dark background color for the body */
-    color: #ffffff; /* White text color for better readability */
-    font-family: Arial, sans-serif; /* Sets the font for the page */
-    margin: 0; /* Removes default margin */
-    padding: 20px; /* Adds padding around the body content */
+    background-color: #121212; /* Dark background color */
+    color: #ffffff; /* White text color */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* Styles for main headings (h1) */
-h1 {
-    color: #c595ff; /* Purple color for the heading */
-    text-align: center; /* Centers the heading */
-    margin-bottom: 10px; /* Adds space below the heading */
+/* Container for settings and graph */
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px; /* Add padding inside the container */
+    padding-top: 0;
 }
 
-/* Styles for the container div holding the graph */
+/* Settings container */
+.settings-container {
+    background-color: #1e1e1e; /* Dark gray background for settings */
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px; /* Set a fixed width for settings */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.settings-container h3 {
+    color: #bb86fc; /* Purple heading color */
+    margin-bottom: 15px;
+}
+
+/* Styling for labels */
+label {
+    display: block; /* Ensure labels appear on a new line */
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-top: 7px;
+}
+
+/* Styling for radio buttons, checkboxes, and inputs */
+input[type="radio"], input[type="checkbox"] + label{
+    margin-right: 2px;
+    margin-left: 10px;
+    vertical-align: middle;
+    
+}
+
+input[type="number"], input[type="submit"] {
+    width: 90%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #1c1426; /* Dark background for inputs */
+    border: 1px solid #bb86fc; /* Purple border */
+    color: #ffffff; /* White text */
+    border-radius: 4px;
+}
+
+/* Reprocess button */
+input[type="submit"] {
+    background-color: #bb86fc; /* Purple background for button */
+    color: #121212; /* Dark text on the button */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+   
+}
+
+input[type="submit"]:hover {
+    background-color: #9b59b6; /* Darker purple on hover */
+}
+
+/* Graph container */
 .graph-container {
-    width: 100%; /* Makes the container take full width */
-    max-width: 1000px; /* Limits the maximum width to 1000px */
-    margin: 0 auto; /* Centers the container horizontally */
-    padding: 0; /* No padding inside the container */
-    margin-bottom: 0; /* No margin below the container */
+    flex-grow: 1; /* Take up remaining space for the graph */
+    background-color: #1e1e1e; /* Dark background for the graph */
+    padding: 20px;
+    border-radius: 8px;
+    padding-bottom: 10px;
 }
 
-/* Styles for the graph inside the container */
-.graph-container .plotly-graph-div {
-    width: 100% !important; /* Forces the width of the graph to fill the container */
-    height: auto !important; /* Maintains the aspect ratio of the graph */
+/* Score section */
+#score-section {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    padding: auto;
+    color: #bb86fc; /* Purple score color */
 }
 
-/* Styles for the back link, styled as a button */
-a.back-link {
-    display: inline-block; /* Makes the link behave like a block element */
-    background-color: #bb86fc; /* Light purple background for the button */
-    color: #000000; /* Black text for visibility */
-    padding: 12px 20px; /* Padding inside the button */
-    margin-top: 0; /* No margin on top */
-    border: none; /* No border around the button */
-    border-radius: 4px; /* Rounded corners for the button */
-    text-decoration: none; /* Removes underline from the link */
-    cursor: pointer; /* Changes the cursor to pointer on hover */
-    font-weight: bold; /* Makes the text bold */
+/* Return button style */
+.return-botton {
+    margin-top: 40px;
+    text-align: center;
+    
 }
 
-/* Styles for the back link on hover */
-a.back-link:hover {
-    background-color: #9b59b6; /* Changes background color on hover */
-    color: #ffffff; /* Changes text color to white on hover */
+.return-botton a {
+    text-decoration: none;
+    color: #ffffff; /* White text */
+    background-color: #bb86fc; /* Purple background */
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 20px; /* Distance from the bottom of the container */
+    left: 80px; 
 }
 
-/* Styles for the Plotly graph background */
-.plotly-graph-div {
-    background-color: #1e1e1e; /* Dark gray background for the graph */
+.return-botton a:hover {
+    background-color: #9b59b6; /* Darker purple on hover */
+    
 }
 
-/* Styles for the Plotly mode bar (controls) */
-.plotly .modebar {
-    background-color: #1e1e1e !important; /* Dark background for the mode bar */
-    color: #ffffff !important; /* White text for better readability */
+/* Aligning checkboxes and their labels */
+.settings-container .checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.settings-container .checkbox-container label {
+    margin-left: 5px; /* Space between checkbox and label */
+}
+
+/* Aligning the input fields and labels */
+input[type="radio"], input[type="checkbox"] + label {
+    vertical-align: middle;
+    display: inline;
+}
+
+/* Remove excess margin/padding above the page */
+h1 {
+    margin-top: 0;
+    padding-top: 10px;
+    text-align: center;
+}
+
+h3 {
+    margin-top: 0;
+    
+}
+
+.left_bar{
+    height: 100%;
+    display: block;
+}
+
+/* Container for the checkboxes with a max height */
+.components {
+    display: flex;              /* Use flexbox for alignment */
+    flex-wrap: wrap;            /* Allow checkboxes to wrap to the next line */
+    gap: 10px;                  /* Optional: Space between checkboxes */
+    max-height: 130px;          /* Maximum height for the checkbox container */
+    overflow-y: auto;           /* Add scrolling if content exceeds max height */
+    border: 1px solid #bb86fc;  /* Optional: Border around the container */
+    padding: 10px;
+}
+
+/* Styling for each checkbox label */
+.checkbox-components input[type="checkbox"] + label {
+    display: inline-block;      /* Keep label next to checkbox */
+    margin-left: 5px;           /* Space between checkbox and label */
+}
+
+/* Styling for checkboxes */
+.checkbox-components input[type="checkbox"] {
+    display: inline-block;      /* Keep checkbox inline */
+    margin-right: 5px;
+}
+hr{
+    border: 1px solid #bb86fc00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .settings-container {
+        width: 100%; /* Make settings container full width on small screens */
+    }
+
+    .graph-container {
+        width: 100%; /* Ensure graph takes full width */
+    }
 }

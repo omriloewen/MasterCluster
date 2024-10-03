@@ -14,7 +14,7 @@ def input_to_X(input_file):
     """
     print("symnmf.input_to_X")
     # Use pandas to read the CSV file without headers and convert to a list of lists
-    return pd.read_csv(input_file, header=None).to_numpy().tolist()
+    return pd.read_csv(input_file).values.tolist()
 
 
 def gen_H(W, k):
@@ -51,7 +51,7 @@ def symnmf_labels(W, H_init):
     return [np.argmax(row) for row in H]
 
 
-def symnmf(filepath, k):
+def symnmf(X, k):
     """Executes symmetric Non-negative Matrix Factorization (NMF) on the data from a specified file.
 
     Args:
@@ -63,7 +63,7 @@ def symnmf(filepath, k):
     """
     print("symnmf.symnmf")
     # Convert the input CSV file to a matrix X
-    X = input_to_X(filepath)
+    X = X.values.tolist()
     # Normalize the matrix X to create the input matrix W for NMF
     W = mysymnmf.norm(X, len(X), len(X[0]))
     # Generate the initial matrix H
