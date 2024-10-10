@@ -21,7 +21,7 @@ def reduce_dimensions(X, n_components=3):
     return pca.fit_transform(X)
 
 
-def create_2d_cluster_plot(X, cluster_labels, axis_labels):
+def create_2d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
     """Creates a 2D scatter plot of clustered data.
 
     Args:
@@ -66,10 +66,10 @@ def create_2d_cluster_plot(X, cluster_labels, axis_labels):
     update_dark_mode_layout(fig)
 
     # Save the plot as an HTML file in the specified directory
-    fig.write_html("templates/cluster_plot.html", full_html=False)
+    fig.write_html(graph_path, full_html=False)
 
 
-def create_3d_cluster_plot(X, cluster_labels, axis_labels):
+def create_3d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
     """Creates a 3D scatter plot of clustered data.
 
     Args:
@@ -117,7 +117,7 @@ def create_3d_cluster_plot(X, cluster_labels, axis_labels):
     update_dark_mode_layout(fig, True)
 
     # Save the plot as an HTML file in the specified directory
-    fig.write_html("templates/cluster_plot.html", full_html=False)
+    fig.write_html(graph_path, full_html=False)
 
 
 def update_dark_mode_layout(fig, is_3d=False):

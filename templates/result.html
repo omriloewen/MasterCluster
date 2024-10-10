@@ -98,6 +98,7 @@
                 <input type="hidden" name="headers" value="{{headers | join(',')  }}">
                 <input type="hidden" name="labels" value="{{ labels | join(',')  }}">
                 <input type="hidden" name="score" value="{{ score }}">
+                <input type="hidden" name="graph_filename" value="{{ graph_filename }}">
                 <!-- Hidden Inputs (Serialized DataFrame and other arguments) -->
             </form>
 
@@ -108,7 +109,7 @@
         <!-- Right side: Graph -->
         <div class="graph-container">
             <div id="graph">
-                {% include 'cluster_plot.html' %}
+                {% include graph_filename %}
             </div>
             <!-- Score Display -->
             <div id="score-section">

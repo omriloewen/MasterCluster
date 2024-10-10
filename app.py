@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template
 from flask_caching import Cache
 from CM_utils import cluster, graph
+from datetime import datetime
 import os
 import pandas as pd
 import numpy as np
@@ -77,6 +78,10 @@ def create_result_page(
     X, k, labels, csv_header, graph_dimension, use_pca, graph_attributes
 ):
     print("create_result_page")
+    graph_dir = os.path.join(os.getcwd(), "templates")
+    graph_filename = f"cluster_plot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+    graph_path = os.path.join(graph_dir, graph_filename)
+
     threeD = False
     labels = np.array(labels)  # Convert labels to numpy array
     headings = X.columns.tolist()
@@ -96,9 +101,17 @@ def create_result_page(
             X_reduced = X.iloc[:, graph_attributes].values
 
     if threeD:
-        graph.create_3d_cluster_plot(X_reduced, labels, graph_labels)  # Create 3D plot
+        graph.create_3d_cluster_plot(
+            X_reduced, labels, graph_labels, graph_path
+        )  # Create 3D plot
     else:
-        graph.create_2d_cluster_plot(X_reduced, labels, graph_labels)
+        graph.create_2d_cluster_plot(X_reduced, labels, graph_labels, graph_path)
+
+    for filename in os.listdir(graph_dir):
+        if filename.startswith("cluster_plot_") and filename != graph_filename:
+            os.remove(os.path.join(graph_dir, filename))
+
+    return graph_filename
 
 
 @app.route("/")
@@ -170,7 +183,7 @@ def upload_file():
         labels, score, k = main_cluster(
             X, k, cluster_method, clustering_evaluation_method, elbow, threshold, maxk
         )
-        create_result_page(
+        graph_filename = create_result_page(
             X,
             k,
             labels,
@@ -202,6 +215,7 @@ def upload_file():
             D=X.shape[1],
             headers=headers,
             score=str(score),
+            graph_filename=graph_filename,
         )  # Render the result page
     except Exception as e:
         print(e)  # Print error message
@@ -242,6 +256,7 @@ def reprocess():
     headers = request.form.get("headers").split(",")
     labels = request.form.get("labels").split(",")
     score = request.form.get("score")
+    graph_filename = request.form.get("graph_filename")
 
     if use_pca != orig_use_pca:
         ReVisualize = True
@@ -277,7 +292,7 @@ def reprocess():
         )
         csv_header = 0 if csv_header == "0" else None
         graph_dimension = int(graph_dimension)
-        create_result_page(
+        graph_filename = create_result_page(
             X,
             k,
             labels,
@@ -291,7 +306,7 @@ def reprocess():
         k = int(k)
         csv_header = 0 if csv_header == "0" else None
         graph_dimension = int(graph_dimension)
-        create_result_page(
+        graph_filename = create_result_page(
             X,
             k,
             labels,
@@ -318,6 +333,7 @@ def reprocess():
         D=X.shape[1],
         headers=headers,
         score=str(score),
+        graph_filename=graph_filename,
     )  # Render the result page
 
 
