@@ -91,7 +91,7 @@ def elbow_symnmf_cluster(X, threshold, maxk):
     return elbow_clustering(X, symnmf.symnmf, threshold, maxk)
 
 
-def elbow_clustering(X, clustering_method, min_delta=0.02, maxk=50):
+def elbow_clustering1(X, clustering_method, e=0.02, maxk=50):
     """Determines the optimal number of clusters for the provided clustering method.
 
     The method uses silhouette scores to evaluate the clustering quality and applies
@@ -138,3 +138,30 @@ def elbow_clustering(X, clustering_method, min_delta=0.02, maxk=50):
             d_m2, d_m1 = d_m1, d
     # If no optimal point found, return the results for the last clustering attempt
     return labels, score
+
+
+def elbow_clustering(X, clustering_method, e=0.02, maxk=50):
+    X_values_np = X.values
+    labels_q = []
+    score_q = []
+    for k in range(2, 6):
+        labels_q.append(clustering_method(X, k))
+        score_q.append(silhouette_score(X_values_np, labels_q[k - 2]))
+    for k in range(5, maxk):
+        if score_q[1] - score_q[0] < e:
+            if score_q[2] - score_q[0] < e or score_q[2] - score_q[1] < e:
+                if score_q[3] - score_q[0] < e or score_q[3] - score_q[2] < e:
+                    return labels_q[0], score_q[0]
+
+        labels_q.append(clustering_method(X, k))
+        score_q.append(silhouette_score(X_values_np, labels_q[4]))
+        labels_q.pop(0)
+        score_q.pop(0)
+
+    if score_q[1] - score_q[0] < e:
+        return labels_q[0], score_q[0]
+    if score_q[2] - score_q[1] < e:
+        return labels_q[1], score_q[1]
+    if score_q[3] - score_q[2] < e:
+        return labels_q[2], score_q[2]
+    return labels_q[3], score_q[3]

@@ -48,7 +48,7 @@ input[type="radio"], input[type="checkbox"] + label{
     
 }
 
-input[type="number"], input[type="submit"] {
+input[type="number"], input[type="submit"], button[type="submit"]{
     width: 90%;
     padding: 10px;
     margin-top: 5px;
@@ -59,7 +59,7 @@ input[type="number"], input[type="submit"] {
 }
 
 /* Reprocess button */
-input[type="submit"] {
+input[type="submit"], button[type="submit"] {
     background-color: #bb86fc; /* Purple background for button */
     color: #121212; /* Dark text on the button */
     font-weight: bold;
@@ -69,7 +69,7 @@ input[type="submit"] {
    
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover ,button[type="submit"]:hover{
     background-color: #9b59b6; /* Darker purple on hover */
 }
 
@@ -87,7 +87,18 @@ input[type="submit"]:hover {
     margin-top: 20px;
     margin-bottom: 5px;
     padding: auto;
+    padding-bottom: 0;
+    width: 70%;
     color: #bb86fc; /* Purple score color */
+    display: inline-block;
+}
+
+.download-section {
+    min-width: 200px;
+    width: 25%;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
 }
 
 /* Return button style */
@@ -97,6 +108,10 @@ input[type="submit"]:hover {
     
 }
 
+.under{
+    display: inline-block;
+    width: 100%;
+}
 .return-botton a {
     text-decoration: none;
     color: #ffffff; /* White text */
@@ -172,6 +187,30 @@ h3 {
 }
 hr{
     border: 1px solid #bb86fc00;
+}
+
+.loader {
+
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #bb86fc;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+#loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 660px;
+
 }
 
 /* Responsive Design */

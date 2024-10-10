@@ -6,9 +6,21 @@
     <title>Master Cluster</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='MC_icon.png') }}" type="image/png">
+    <script>
+        window.onload = function() {
+            var message = "{{ get_flashed_messages()[0] if get_flashed_messages() else '' }}";
+            if (message) {
+                alert(message);  // Display an alert when there is a message
+            }
+        };
+    </script>
 </head>
 <body>
     <h1>Master Cluster</h1>
+
+    {% if error %}
+        <p style="color:rgb(237, 86, 154);">{{ error }}</p>
+    {% endif %}
 
     <!-- Form starts -->
     <form action="/upload" method="POST" enctype="multipart/form-data">
@@ -47,7 +59,7 @@
             <!-- Threshold (Appears only if auto k is selected) -->
             <div id="threshold_option" style="display:none;">
                 <label for="threshold" title="threshold to determine a significant clusters improvement ">Threshold :</label>
-                <input type="number" name="threshold" id="threshold" min="0.001" max="0.1" step="0.001" value="0.002">
+                <input type="number" name="threshold" id="threshold" min="0.001" max="0.1" step="0.001" value="0.01">
                 <hr>
                 <label for="max_clusters" title="threshold to determine a significant clusters improvement">maximum clusters :</label>
                 <input type="number" name="max_clusters" id="max_clusters" min="3" max="100" step="1" value="50">

@@ -20,6 +20,10 @@ h1 {
     margin-bottom: 30px; /* Space below the heading */
 }
 
+p {
+    text-align: center;
+}
+
 /* Label styles */
 label {
     display: block; /* Keep labels inline */

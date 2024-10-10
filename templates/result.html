@@ -8,7 +8,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Clustering Results</h1>
+    <h1>Master Cluster</h1>
 
     <div class="container">
         <div class="left_bar">
@@ -108,14 +108,26 @@
         
         <!-- Right side: Graph -->
         <div class="graph-container">
+            <div id="loading" style="display: none;">
+                <!-- Simple loading spinner -->
+                <div class="loader"></div>
+            </div>
             <div id="graph">
                 {% include graph_filename %}
             </div>
             <!-- Score Display -->
+            <div class="under" id="under">
             <div id="score-section">
                 <h3>Score: {{ score }}</h3>
             </div>
+            
+            <div class="download-section"> <form action="/download_csv" method="POST">
+                <input type="hidden" name="X_json" value="{{ X_json }}">
+                <input type="hidden" name="labels" value="{{ labels | join(',')  }}">
+                <input type="submit" value="Download Clustering Results">
+            </form></div>
         </div>
+    </div>
     </div>
    
 
@@ -165,6 +177,18 @@
                 document.getElementById('k_section').style.display = 'block';
             }
         });
+
+        function showLoading() {
+        document.getElementById('loading').style.display = 'flex';
+        document.getElementById('graph').style.display = 'none';
+        document.getElementById('under').style.display = 'none';
+        }
+
+
+        // Example of showing the loading spinner when the form is submitted
+        document.getElementById("settings-form").onsubmit = function() {
+        showLoading();
+        };
     </script>
 </body>
 </html>

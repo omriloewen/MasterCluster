@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, redirect, url_for, render_template, send_file, flash
 from flask_caching import Cache
 from CM_utils import cluster, graph
 from datetime import datetime
@@ -8,6 +8,7 @@ import numpy as np
 
 
 app = Flask(__name__)
+app.secret_key = "bcwurf63bfub34fy3"
 
 app.config["CACHE_TYPE"] = "simple"
 cache = Cache(app)
@@ -22,6 +23,17 @@ if not os.path.exists(app.config["UPLOAD_FOLDER"]):
     print(f"Directory {app.config['UPLOAD_FOLDER']} created.")
 else:
     print(f"Directory {app.config['UPLOAD_FOLDER']} already exists.")
+
+
+def create_clustering_result_csv(X, labels):
+    unique_filename = (
+        f"clustering_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    )
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+    X_results = X.copy()
+    X_results["Cluster"] = labels
+    X_results.to_csv(file_path, index=False)
+    return file_path, unique_filename
 
 
 # check if the file is csv
@@ -179,6 +191,14 @@ def upload_file():
 
     try:
         X = pd.read_csv(filepath, header=csv_header)
+        if not X.map(lambda x: isinstance(x, (int, float))).all().all():
+            os.remove(filepath)
+            flash(
+                "The uploaded file contains non-numeric values. Please upload a valid file."
+            )
+            return redirect(
+                url_for("index")
+            )  # Redirect to the index route and show message
         # Process the input file
         labels, score, k = main_cluster(
             X, k, cluster_method, clustering_evaluation_method, elbow, threshold, maxk
@@ -198,6 +218,7 @@ def upload_file():
 
         if csv_header == None:
             headers = [f"component {i}" for i in range(X.shape[1])]
+
         return render_template(
             "result.html",
             X_json=X_json,
@@ -335,6 +356,27 @@ def reprocess():
         score=str(score),
         graph_filename=graph_filename,
     )  # Render the result page
+
+
+@app.route("/download_csv", methods=["GET", "POST"])
+def download_csv():
+    X_json = request.form.get("X_json")
+    X = pd.read_json(X_json)
+    labels = request.form.get("labels").split(",")
+    result_filepath, result_filename = create_clustering_result_csv(X, labels)
+    response = send_file(
+        result_filepath,
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name=result_filename,
+    )
+
+    try:
+        os.remove(result_filepath)
+    except Exception as e:
+        print(f"Error deleting file: {e}")
+
+    return response
 
 
 if __name__ == "__main__":
