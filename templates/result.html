@@ -50,7 +50,7 @@
                 <!-- Number of Clusters (if Elbow is not checked) -->
                 <div id="k_section" {% if orig_elbow == 'True' %}style="display:none"{% endif %}>
                     <label for="k">Number of Clusters (k):</label>
-                    <input type="number" name="k" value="{{ orig_k }}">
+                    <input type="number" name="k" value="{{ orig_k }}" min="2" step="1">
                     <hr>
                 </div>
 

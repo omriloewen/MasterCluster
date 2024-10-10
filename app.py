@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template
+from flask_caching import Cache
 from CM_utils import cluster, graph
 import os
 import pandas as pd
@@ -6,6 +7,9 @@ import numpy as np
 
 
 app = Flask(__name__)
+
+app.config["CACHE_TYPE"] = "simple"
+cache = Cache(app)
 
 # define the path for the file upload
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
@@ -210,6 +214,7 @@ def upload_file():
 
 @app.route("/reprocess", methods=["POST"])
 def reprocess():
+    cache.clear()
     ReVisualize = False
     ReCluster = False
     orig_cluster_method = request.form.get("orig_cluster_method")
