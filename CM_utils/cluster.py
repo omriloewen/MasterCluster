@@ -5,48 +5,68 @@ from sklearn.metrics import silhouette_score
 
 
 def kmeans_cluster(X, k):
-    print("kmeans_cluster")
+    """Apply KMeans++ clustering to the dataset.
+
+    This function applies the KMeans++ algorithm to the input data and calculates
+    the silhouette score to evaluate the clustering performance.
+
+    Args:
+        X (pd.DataFrame): The input data to cluster.
+        k (int): The number of clusters.
+
+    Returns:
+        tuple: A tuple containing the cluster labels and the silhouette score.
+    """
+    print(f"running kmeans clustering with k = {k}")
     labels = kmeanspp.kmeanspp(X, k)
     score = silhouette_score(X.values, labels)
     return labels, score
 
 
 def symnmf_cluster(X, k):
-    print("symnmf_cluster")
+    """Apply Symmetric Non-negative Matrix Factorization (SymNMF) clustering.
+
+    This function applies the SymNMF algorithm to the input data and calculates
+    the silhouette score to evaluate the clustering performance.
+
+    Args:
+        X (pd.DataFrame): The input data to cluster.
+        k (int): The number of clusters.
+
+    Returns:
+        tuple: A tuple containing the cluster labels and the silhouette score.
+    """
+    print(f"running symnmf clustering with k = {k}")
     labels = symnmf.symnmf(X, k)
     score = silhouette_score(X.values, labels)
     return labels, score
 
 
 def optimal_cluster(X, k):
-    """Clusters data from a CSV file using KMeans++ and Symmetric Non-negative Matrix Factorization (SymNMF).
+    """Select the optimal clustering method between KMeans++ and SymNMF.
 
-    This function reads the dataset from the specified file, applies two different clustering
-    algorithms (KMeans++ and SymNMF), and evaluates their performances using the silhouette score.
-    The clustering method with the higher silhouette score is selected.
+    This function compares the clustering results from KMeans++ and SymNMF
+    algorithms based on their silhouette scores and returns the labels of
+    the clusters from the better-performing method.
 
     Args:
-        filepath (str): The path to the CSV file containing the dataset to be clustered.
+        X (pd.DataFrame): Data to be clustered.
         k (int): The number of clusters to form.
 
     Returns:
-        array-like: The labels of the clusters based on the selected clustering algorithm.
+        tuple: A tuple containing the labels of the selected clusters and the corresponding silhouette score.
 
     Raises:
-        FileNotFoundError: If the specified file does not exist.
         ValueError: If k is less than 1.
     """
-    print("optimal_cluster")
-    # Get cluster labels from KMeans++ algorithm
-    kmeans_labels = kmeanspp.kmeanspp(X, k)
-    # Get cluster labels from Symmetric Non-negative Matrix Factorization
-    symnmf_labels = symnmf.symnmf(X, k)
-    # Load the data from the specified CSV file
-    X_values_np = X.values
-    # Calculate silhouette scores for both clustering methods
+    print(f"running optimal clustering with k = {k}")
+    kmeans_labels = kmeanspp.kmeanspp(X, k)  # Apply KMeans++
+    symnmf_labels = symnmf.symnmf(X, k)  # Apply SymNMF
+    X_values_np = X.values  # Convert DataFrame to numpy array
+    # Calculate silhouette scores for both algorithms
     Kmeans_score = silhouette_score(X_values_np, kmeans_labels)
     symnmf_score = silhouette_score(X_values_np, symnmf_labels)
-    # Compare silhouette scores and choose the clustering method with the higher score
+    # Select the clustering method with the higher silhouette score
     if Kmeans_score > symnmf_score:
         print("chose kmeans with score: ", Kmeans_score)
         return kmeans_labels, Kmeans_score
@@ -57,20 +77,25 @@ def optimal_cluster(X, k):
 
 
 def elbow_optimal_cluster(X, threshold, maxk):
-    """Clusters the data using either k-means or SymNMF based on silhouette scores.
+    """Perform elbow method to find the optimal number of clusters.
+
+    This function applies both KMeans and SymNMF clustering methods,
+    evaluates their performances based on silhouette scores, and
+    selects the method with the best score.
 
     Args:
-        filepath (str): The path to the CSV file containing the data to be clustered.
+        X (pd.DataFrame): Data to be clustered.
+        threshold (float): The threshold for silhouette score improvement.
+        maxk (int): The maximum number of clusters to consider.
 
     Returns:
-        array: The cluster labels assigned to the data points based on the chosen clustering method.
+        tuple: A tuple containing the cluster labels of the selected method and the corresponding silhouette score.
     """
-    print("elbow_optimal_cluster")
-    # Load the data from the specified CSV file
-    # Perform elbow clustering with k-means
-    kmeans_res = elbow_clustering(X, kmeanspp.kmeanspp, threshold, maxk)
-    # Perform elbow clustering with Symmetric Non-negative Matrix Factorization (SymNMF)
-    symnmf_res = elbow_clustering(X, symnmf.symnmf, threshold, maxk)
+    print("running optimal clustering with elbow method")
+    kmeans_res = elbow_clustering(
+        X, kmeanspp.kmeanspp, threshold, maxk
+    )  # Elbow for KMeans
+    symnmf_res = elbow_clustering(X, symnmf.symnmf, threshold, maxk)  # Elbow for SymNMF
 
     # Compare silhouette scores and choose the clustering method accordingly
     if kmeans_res[1] > symnmf_res[1]:
@@ -82,82 +107,72 @@ def elbow_optimal_cluster(X, threshold, maxk):
 
 
 def elbow_kmeans_cluster(X, threshold, maxk):
-    print("elbow_kmeans_cluster")
+    """Cluster data using the elbow method with KMeans.
+
+    Args:
+        X (pd.DataFrame): Data to be clustered.
+        threshold (float): The threshold for silhouette score improvement.
+        maxk (int): The maximum number of clusters to consider.
+
+    Returns:
+        tuple: The results of the elbow clustering using KMeans.
+    """
+    print("running kmeans clustering with elbow method")
     return elbow_clustering(X, kmeanspp.kmeanspp, threshold, maxk)
 
 
 def elbow_symnmf_cluster(X, threshold, maxk):
-    print("elbow_symnmf_cluster")
+    """Cluster data using the elbow method with SymNMF.
+
+    Args:
+        X (pd.DataFrame): Data to be clustered.
+        threshold (float): The threshold for silhouette score improvement.
+        maxk (int): The maximum number of clusters to consider.
+
+    Returns:
+        tuple: The results of the elbow clustering using SymNMF.
+    """
+    print("running symnmf clustering with elbow method")
     return elbow_clustering(X, symnmf.symnmf, threshold, maxk)
 
 
-def elbow_clustering1(X, clustering_method, e=0.02, maxk=50):
-    """Determines the optimal number of clusters for the provided clustering method.
+def elbow_clustering(X, clustering_method, e=0.02, maxk=50):
+    """Apply the elbow method to determine the optimal number of clusters.
 
-    The method uses silhouette scores to evaluate the clustering quality and applies
-    the elbow method to find the point where adding more clusters yields diminishing returns.
+    This function evaluates the clustering method's performance based on
+    silhouette scores and determines when to stop based on the provided threshold.
 
     Args:
-        X (DataFrame): The input data to be clustered.
-        clustering_method (callable): The clustering function to be used, e.g., kmeanspp.kmeanspp or symnmf.symnmf.
-        maxk (int, optional): The maximum number of clusters to evaluate (default is 50).
-        min_delta (float, optional): The minimum score difference to consider (default is 0.02).
+        X (pd.DataFrame): The input data to cluster.
+        clustering_method (function): The clustering algorithm to apply.
+        e (float): The threshold for silhouette score improvement.
+        maxk (int): The maximum number of clusters to consider.
 
     Returns:
-        tuple: A tuple containing the labels of the clusters and the best silhouette score achieved.
+        tuple: The cluster labels and the silhouette score of the selected number of clusters.
     """
-    print("elbow_clustering with method ", clustering_method)
-    X_values_np = X.values
-    # Generate cluster labels and silhouette score for 2 clusters
-    labels2 = clustering_method(X, 2)
-    score_m3 = silhouette_score(X_values_np, labels2)
-    # Generate cluster labels and silhouette score for 3 clusters
-    labels_m2 = clustering_method(X, 3)
-    score_m2 = silhouette_score(X_values_np, labels_m2)
-    # Calculate the improvement in score from 2 clusters to 3 clusters
-    d_m2 = score_m2 - score_m3
-    # If the improvement is not significant, return the results for 2 clusters
-    if d_m2 < min_delta:
-        return labels2, score_m3
-    # Prepare to evaluate 4 clusters
-    labels_m1 = clustering_method(X, 4)
-    score_m1 = silhouette_score(X_values_np, labels_m1)
-
-    d_m1 = score_m1 - score_m2
-    # Iterate from 5 clusters up to maxk to find the optimal number of clusters
-    for k in range(5, min(X.shape[0], maxk)):
-        labels = clustering_method(X, k)
-        score = silhouette_score(X_values_np, labels)
-        d = score - score_m1
-        # If the score improvement conditions indicate an optimal point, return the results
-        if d < d_m1 and d_m1 < d_m2:
-            return labels_m2, score_m2
-        else:  # Update the previous cluster results for the next iteration
-            labels_m2, labels_m1 = labels_m1, labels
-            score_m2, score_m1 = score_m1, score
-            d_m2, d_m1 = d_m1, d
-    # If no optimal point found, return the results for the last clustering attempt
-    return labels, score
-
-
-def elbow_clustering(X, clustering_method, e=0.02, maxk=50):
-    X_values_np = X.values
+    print(f"running elbow clustering with method {clustering_method}")
+    X_values_np = X.values  # Convert DataFrame to numpy array
     labels_q = []
     score_q = []
+    # Evaluate clustering for k from 2 to 5
     for k in range(2, 6):
         labels_q.append(clustering_method(X, k))
         score_q.append(silhouette_score(X_values_np, labels_q[k - 2]))
+    # Evaluate clustering for k from 5 to maxk
     for k in range(5, maxk):
+        # Check for changes in silhouette scores
         if score_q[1] - score_q[0] < e:
             if score_q[2] - score_q[0] < e or score_q[2] - score_q[1] < e:
                 if score_q[3] - score_q[0] < e or score_q[3] - score_q[2] < e:
                     return labels_q[0], score_q[0]
-
+        # Continue evaluating for the next k
         labels_q.append(clustering_method(X, k))
         score_q.append(silhouette_score(X_values_np, labels_q[4]))
         labels_q.pop(0)
         score_q.pop(0)
 
+    # if no elbow point found, Compare the last scores and return the results based on threshold
     if score_q[1] - score_q[0] < e:
         return labels_q[0], score_q[0]
     if score_q[2] - score_q[1] < e:

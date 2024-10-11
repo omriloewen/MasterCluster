@@ -27,7 +27,7 @@ def gen_H(W, k):
     Returns:
         list: A list representing the generated matrix H.
     """
-    print("symnmf.gen_H")
+    print(f"generating initial H matrix for k = {k}")
     # Calculate the mean of the elements in W
     mean_W = np.mean(W)
     # Generate a uniform distribution for H based on the mean and number of components k
@@ -44,7 +44,7 @@ def symnmf_labels(W, H_init):
     Returns:
         list: A list of labels, where each label corresponds to the index of the maximum element in each row of H.
     """
-    print("symnmf.symnmf_labels")
+    print("updating H and creating labels")
     # Perform symmetric NMF to compute the matrix H
     H = mysymnmf.symnmf(W, H_init, len(W), len(H_init[0]))
     # Generate labels based on the index of the maximum value in each row of H
@@ -61,7 +61,7 @@ def symnmf(X, k):
     Returns:
         list: A list of labels resulting from the NMF process.
     """
-    print("symnmf.symnmf")
+    print(f"running symnmf with k = {k}")
     # Convert the input CSV file to a matrix X
     X = X.values.tolist()
     # Normalize the matrix X to create the input matrix W for NMF

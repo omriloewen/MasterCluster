@@ -5,7 +5,10 @@ import numpy as np
 
 
 def reduce_dimensions(X, n_components=3):
-    """Reduces the dimensions of the dataset using PCA.
+    """Reduces the dimensions of the dataset using Principal Component Analysis (PCA).
+
+    This function transforms the original dataset into a lower-dimensional space
+    defined by the principal components, which capture the most variance in the data.
 
     Args:
         X (ndarray): The input data to reduce, where rows represent samples
@@ -14,9 +17,9 @@ def reduce_dimensions(X, n_components=3):
                             Default is 3.
 
     Returns:
-        ndarray: The transformed dataset with reduced dimensions.
+        ndarray: The transformed dataset with reduced dimensions (shape (n_samples, n_components)).
     """
-    print("graph.reduce_dimensions")
+    print("reducing dimensions")
     pca = PCA(n_components=n_components)
     return pca.fit_transform(X)
 
@@ -24,18 +27,22 @@ def reduce_dimensions(X, n_components=3):
 def create_2d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
     """Creates a 2D scatter plot of clustered data.
 
+    The function visualizes the clusters in a 2D plane, using different colors
+    to represent different clusters. It can also display the index of each point
+    in the hover information.
+
     Args:
-        X (ndarray): The input data that has been reduced to two dimensions.
-                     Shape should be (n_samples, 2).
+        X (ndarray): The input data that has been reduced to two dimensions,
+                     expected shape is (n_samples, 2).
         cluster_labels (ndarray): Labels indicating the cluster assignment
                                    for each sample in X.
+        axis_labels (list of str): A list containing labels for the x-axis and y-axis.
+        graph_path (str): Path where the generated plot will be saved as an HTML file.
+
+    Returns:
+        None
     """
-    print("graph.create_2d_cluster_plot")
-    print(axis_labels)
-    print(X[:, 0].shape)
-    print(X[:, 1].shape)
-    print(cluster_labels.astype(str).shape)
-    print(np.arange(X.shape[0]).shape)
+    print("creating 2d cluster plot")
 
     # Create DataFrame from the reduced results for easier plotting
     df = pd.DataFrame(
@@ -72,19 +79,22 @@ def create_2d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
 def create_3d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
     """Creates a 3D scatter plot of clustered data.
 
+    This function visualizes the clusters in a 3D space, using different colors
+    to represent different clusters. It can also display the index of each point
+    in the hover information.
+
     Args:
-        X (ndarray): The input data that has been reduced to three dimensions.
-                     Shape should be (n_samples, n_components).
+        X (ndarray): The input data that has been reduced to three dimensions,
+                     expected shape is (n_samples, 3).
         cluster_labels (ndarray): Labels indicating the cluster assignment
                                    for each sample in X.
+        axis_labels (list of str): A list containing labels for the x-axis, y-axis, and z-axis.
+        graph_path (str): Path where the generated plot will be saved as an HTML file.
+
+    Returns:
+        None
     """
-    print("graph.create_3d_cluster_plot")
-    print(axis_labels)
-    print(X[:, 0].shape)
-    print(X[:, 1].shape)
-    print(X[:, 2].shape)
-    print(cluster_labels.astype(str).shape)
-    print(np.arange(X.shape[0]).shape)
+    print("creating 3d cluster plot")
 
     # Create DataFrame from the reduced results for easier plotting
     df = pd.DataFrame(
@@ -123,11 +133,18 @@ def create_3d_cluster_plot(X, cluster_labels, axis_labels, graph_path):
 def update_dark_mode_layout(fig, is_3d=False):
     """Updates the layout of the figure for dark mode.
 
+    This function modifies the layout properties of the given Plotly figure
+    to improve visibility against dark backgrounds, specifically designed for
+    both 2D and 3D plots.
+
     Args:
         fig (plotly.graph_objs.Figure): The Plotly figure to be updated.
         is_3d (bool): If True, apply 3D-specific settings; otherwise, apply 2D settings.
+
+    Returns:
+        None
     """
-    print("graph.update_dark_mode_layout")
+    print("updating plot dark mode layout")
 
     if is_3d:
         # Apply dark mode styling for 3D plots

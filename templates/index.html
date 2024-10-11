@@ -1,106 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Cluster</title>
+    <meta charset="UTF-8"> <!-- Character encoding for the document -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design settings -->
+    <title>Master Cluster</title> <!-- Title of the webpage -->
+    
+    <!-- Link to external stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+    <!-- Link to favicon image -->
     <link rel="icon" href="{{ url_for('static', filename='MC_icon.png') }}" type="image/png">
+    
     <script>
+        // This script runs when the window has loaded
         window.onload = function() {
+            // Retrieve any flashed messages from the server
             var message = "{{ get_flashed_messages()[0] if get_flashed_messages() else '' }}";
+            // If a message exists, display it as an alert
             if (message) {
-                alert(message);  // Display an alert when there is a message
+                alert(message);
             }
         };
     </script>
 </head>
 <body>
-    <h1>Master Cluster</h1>
+    <h1>Master Cluster</h1> <!-- Main heading of the page -->
 
     {% if error %}
+        <!-- Display error message if it exists -->
         <p style="color:rgb(237, 86, 154);">{{ error }}</p>
     {% endif %}
 
-    <!-- Form starts -->
+    <!-- Form for file upload and clustering parameters -->
     <form action="/upload" method="POST" enctype="multipart/form-data">
-        <!-- CSV File Upload -->
+        <!-- CSV File Upload Section -->
         <label for="file" title="Upload a CSV file to be processed">CSV File:</label>
-        <input type="file" name="file" id="file" required accept=".csv">
+        <input type="file" name="file" id="file" required accept=".csv"> <!-- Input for CSV file -->
 
-        <!-- Clusters Number Input or Auto-Select Option -->
+        <!-- Input for Number of Clusters -->
         <label for="param" title="Specify the number of clusters or let the system decide">Number of clusters (k) :</label>
-        <input type="number" name="param" id="param" placeholder="Enter number" min="2" step="1">
+        <input type="number" name="param" id="param" placeholder="Enter number" min="2" step="1"> <!-- Number input for clusters -->
         
+        <!-- Checkbox for Auto-Select Option -->
         <input type="checkbox" id="auto_select" name="auto_select" onchange="toggleThreshold()" title="Allow the system to automatically select the optimal number of clusters">
         <label for="auto_select" title="Let the system choose optimal k with elbow method">Auto optimal selection</label>
         
-        <!-- Button to show/hide advanced settings -->
+        <!-- Button to Show/Hide Advanced Settings -->
         <button type="button" id="toggle_advanced" class="inside" onclick="toggleAdvancedSettings()" title="Click to display advanced settings">Advanced Settings</button>
 
-        <!-- Advanced Settings (Hidden by Default, toggled by button click) -->
-        <div id="advanced_settings" style="display:none; ">
-            <!-- CSV Header Option as Checkbox -->
-            <input type="checkbox" id="csv_header" name="csv_header" checked title="we assume your csv contain headers, unchecking this means we will treat the first line as a data point">
-            <label for="csv_header" title="we assume your csv contain headers, unchecking this means we will treat the first line as a data point">CSV contains headers</label>
+        <!-- Advanced Settings (Initially Hidden) -->
+        <div id="advanced_settings" style="display:none;">
+            <!-- Checkbox for CSV Header Option -->
+            <input type="checkbox" id="csv_header" name="csv_header" checked title="We assume your CSV contains headers, unchecking means the first line is treated as data">
+            <label for="csv_header" title="We assume your CSV contains headers, unchecking means the first line is treated as data">CSV contains headers</label>
             <hr>
 
-            <!-- Clustering Method -->
+            <!-- Clustering Method Selection -->
             <label for="cluster_method" title="Choose the method for clustering the data">Clustering method:</label>
-            <input type="radio" name="cluster_method" value="optimal" checked title="we will try both and choose based on the evaluation method"> Optimal
+            <input type="radio" name="cluster_method" value="optimal" checked title="We will try both and choose based on the evaluation method"> Optimal
             <input type="radio" name="cluster_method" value="symnmf" title="Symmetric Nonnegative Matrix Factorization clustering"> symnmf
             <input type="radio" name="cluster_method" value="kmeans++" title="k-means++ clustering"> kmeans++
             <hr>
 
-            <!-- Evaluation Method -->
+            <!-- Clustering Evaluation Method Selection -->
             <label for="eval_method" title="Select how the clustering should be evaluated">Clustering evaluation method:</label>
             <input type="radio" name="eval_method" value="silhouette" checked title="Silhouette Score evaluation"> Silhouette Score
             <hr>
-            <!-- Threshold (Appears only if auto k is selected) -->
+            
+            <!-- Threshold Options (Visible Only If Auto k is Selected) -->
             <div id="threshold_option" style="display:none;">
-                <label for="threshold" title="threshold to determine a significant clusters improvement ">Threshold :</label>
+                <label for="threshold" title="Threshold to determine a significant clusters improvement">Threshold :</label>
                 <input type="number" name="threshold" id="threshold" min="0.001" max="0.1" step="0.001" value="0.01">
                 <hr>
-                <label for="max_clusters" title="threshold to determine a significant clusters improvement">maximum clusters :</label>
+                <label for="max_clusters" title="Maximum clusters allowed">Maximum clusters :</label>
                 <input type="number" name="max_clusters" id="max_clusters" min="3" max="100" step="1" value="50">
                 <hr>
             </div>
             
-            <!-- Visualization Options -->
+            <!-- Graph Visualization Options -->
             <label for="graph_dimension" title="Choose the dimension for the graph visualization">Graph Dimension:</label>
             <input type="radio" name="graph_dimension" value="3" checked title="3D graph"> 3D
             <input type="radio" name="graph_dimension" value="2" title="2D graph"> 2D
             <hr>
-            <input type="checkbox" id="use_pca" name="use_pca" checked title="Apply Principal Component Analysis to reduce the data to key components for visualization">
+            <input type="checkbox" id="use_pca" name="use_pca" checked title="Apply Principal Component Analysis to reduce data for visualization">
             <label for="use_pca" title="Use PCA for components">Use PCA for components visualization</label>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit Button for Upload and Processing -->
         <input type="submit" value="Upload and Process">
     </form>
 
-    <!-- JavaScript to Toggle Threshold and Advanced Settings -->
+    <!-- JavaScript Functions for Toggling Visibility -->
     <script>
-        // Toggle the threshold option when auto k is selected
+        // Function to toggle the visibility of the threshold option when auto k is selected
         function toggleThreshold() {
             const autoSelect = document.getElementById('auto_select').checked;
             const thresholdOption = document.getElementById('threshold_option');
             
-            if (autoSelect) {
-                thresholdOption.style.display = 'block';
-            } else {
-                thresholdOption.style.display = 'none';
-            }
+            // Show or hide the threshold option based on checkbox state
+            thresholdOption.style.display = autoSelect ? 'block' : 'none';
         }
 
-        // Toggle the visibility of the advanced settings
+        // Function to toggle the visibility of the advanced settings section
         function toggleAdvancedSettings() {
             const advancedSettings = document.getElementById('advanced_settings');
-            if (advancedSettings.style.display === 'none') {
-                advancedSettings.style.display = 'block';
-            } else {
-                advancedSettings.style.display = 'none';
-            }
+            // Toggle between showing and hiding the advanced settings
+            advancedSettings.style.display = advancedSettings.style.display === 'none' ? 'block' : 'none';
         }
     </script>
 </body>
